@@ -1,0 +1,18 @@
+{
+  "mailserver": "localhost",
+  "mailport": 25,
+  "mailfrom": "RSS <a@a.com>",
+  "mailto": "People <b@b.com>",
+  "mailtoerror": "c@c.com",
+  "lastupdatefile": ".last_update",
+  "feeds": [
+    {
+      "title": "Certificates *.aaa.com",
+      "url": "https://crt.sh/atom?q=%25.aaa.com"
+    },
+    {
+      "title": "Certificates *.bbb.com",
+      "url": "https://crt.sh/atom?q=%25.bbb.com"
+    }
+  ]
+}

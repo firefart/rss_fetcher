@@ -1,0 +1,14 @@
+[Unit]
+Description=RSS Fetcher
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+User=rss
+Group=nogroup
+SyslogIdentifier=rss
+ExecStart=/home/rss/rss_fetcher -config /home/rss/config.json
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
