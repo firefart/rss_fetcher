@@ -10,6 +10,7 @@ import (
   "time"
   "bytes"
   "io/ioutil"
+  "strings"
 
   "gopkg.in/gomail.v2"
   "github.com/mmcdole/gofeed"
@@ -88,18 +89,22 @@ func sendErrorMessage(errorString string) error {
   return err
 }
 
-func feedToText(item *gofeed.Item) string {
+func feedToText(item *gofeed.Item, html bool) string {
+  linebreak := "\n\n"
+  if html {
+    linebreak = "\n<br><br>\n"
+  }
   var buffer bytes.Buffer
   if item.Link != "" {
-    buffer.WriteString(fmt.Sprintf("%s\n\n", item.Link))
+    buffer.WriteString(fmt.Sprintf("%s%s", item.Link, linebreak))
   }
   if item.Description != "" {
-    buffer.WriteString(fmt.Sprintf("%s\n\n", item.Description))
+    buffer.WriteString(fmt.Sprintf("%s%s", item.Description, linebreak))
   }
   if item.Content != "" {
-    buffer.WriteString(fmt.Sprintf("%s\n\n", item.Content))
+    buffer.WriteString(fmt.Sprintf("%s%s", item.Content, linebreak))
   }
-  return buffer.String()
+  return strings.TrimSuffix(buffer.String(), linebreak)
 }
 
 func sendFeedItem(title string, item *gofeed.Item) error {
@@ -107,9 +112,8 @@ func sendFeedItem(title string, item *gofeed.Item) error {
   m.SetHeader("From", configuration.Mailfrom)
   m.SetHeader("To", configuration.Mailto)
   m.SetHeader("Subject", fmt.Sprintf("[RSS] [%s]: %s", title, item.Title))
-  s := feedToText(item)
-  m.SetBody("text/plain", s)
-  m.AddAlternative("text/html", s)
+  m.SetBody("text/plain", feedToText(item, false))
+  m.AddAlternative("text/html", feedToText(item, true))
 
   err := sendEmail(m)
   return err
