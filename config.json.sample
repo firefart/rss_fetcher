@@ -3,6 +3,7 @@
   "mailport": 25,
   "mailfrom": "RSS <a@a.com>",
   "mailto": "People <b@b.com>",
+  "mailonerror": true,
   "mailtoerror": "c@c.com",
   "lastupdatefile": ".last_update",
   "feeds": [

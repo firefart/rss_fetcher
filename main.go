@@ -33,6 +33,7 @@ type Configuration struct {
   Mailserver      string
   Mailport        int
   Mailfrom        string
+  Mailonerror     bool
   Mailtoerror     string
   Mailto          string
   Feeds           []ConfigurationFeed
@@ -175,9 +176,11 @@ func main() {
     err = processFeed(feed)
     if err != nil {
       log.Printf("ERROR: %s\n", err.Error())
-      err = sendErrorMessage(err.Error())
-      if err != nil {
-        log.Printf("ERROR on sending error mail: %s", err.Error())
+      if configuration.Mailonerror {
+        err = sendErrorMessage(err.Error())
+        if err != nil {
+          log.Printf("ERROR on sending error mail: %s", err.Error())
+        }
       }
     }
   }
