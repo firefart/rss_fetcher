@@ -11,6 +11,8 @@ import (
   "bytes"
   "io/ioutil"
   "strings"
+  "net"
+  "net/http"
 
   "gopkg.in/gomail.v2"
   "github.com/mmcdole/gofeed"
@@ -30,6 +32,7 @@ var (
 )
 
 type Configuration struct {
+  Timeout         int
   Mailserver      string
   Mailport        int
   Mailfrom        string
@@ -121,7 +124,20 @@ func sendFeedItem(title string, item *gofeed.Item) error {
 }
 
 func processFeed(feedInput ConfigurationFeed) error {
+  timeout := time.Duration(configuration.Timeout) * time.Second
+  netTransport := &http.Transport {
+    Dial: (&net.Dialer{
+      Timeout: timeout,
+    }).Dial,
+    TLSHandshakeTimeout: timeout,
+  }
+
   fp := gofeed.NewParser()
+  fp.Client = &http.Client{
+    Timeout: timeout,
+    Transport: netTransport,
+  }
+
   feed, err := fp.ParseURL(feedInput.Url)
   if err != nil {
     return err

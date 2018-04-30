@@ -1,4 +1,5 @@
 {
+  "timeout": 10,
   "mailserver": "localhost",
   "mailport": 25,
   "mailfrom": "RSS <a@a.com>",
