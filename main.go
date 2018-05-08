@@ -23,48 +23,48 @@ const (
 )
 
 var (
-  debug  = flag.Bool("debug", false, "Print debug output")
-  config = flag.String("config", "", "Config File to use")
+  debug      = flag.Bool("debug", false, "Print debug output")
+  configFile = flag.String("config", "", "Config File to use")
 
-  configuration Configuration
+  config configuration
 
   lastUpdated = time.Now()
 )
 
-type Configuration struct {
-  Timeout         int
-  Mailserver      string
-  Mailport        int
-  Mailfrom        string
-  Mailonerror     bool
-  Mailtoerror     string
-  Mailto          string
-  Feeds           []ConfigurationFeed
-  Lastupdatefile  string
+type configuration struct {
+  Timeout         int                   `json:"timeout"`
+  Mailserver      string                `json:"mailserver"`
+  Mailport        int                   `json:"mailport"`
+  Mailfrom        string                `json:"mailfrom"`
+  Mailonerror     bool                  `json:"mailonerror"`
+  Mailtoerror     string                `json:"mailtoerror"`
+  Mailto          string                `json:"mailto"`
+  Feeds           []configurationFeed   `json:"feeds"`
+  Lastupdatefile  string                `json:"lastupdatefile"`
 }
 
-type ConfigurationFeed struct {
-  Title   string
-  Url     string
+type configurationFeed struct {
+  Title   string    `json:"title"`
+  URL     string    `json:"url"`
 }
 
 // returns Time.now() on error
 func getLastUpdated() time.Time {
-  content, err := ioutil.ReadFile(configuration.Lastupdatefile)
+  content, err := ioutil.ReadFile(config.Lastupdatefile)
   if err != nil {
-    debugOutput(err.Error())
+    debugOutput(fmt.Sprintf("error on reading last udpate file: %v", err))
     return time.Now()
   }
   s, err := time.Parse(timeFormat, string(content))
   if err != nil {
-    debugOutput(err.Error())
+    debugOutput(fmt.Sprintf("error on parsing last udpate file: %v", err))
     return time.Now()
   }
   return s
 }
 
 func setLastUpdated(t time.Time) error {
-  err := ioutil.WriteFile(configuration.Lastupdatefile, []byte(t.Format(timeFormat)), 0644)
+  err := ioutil.WriteFile(config.Lastupdatefile, []byte(t.Format(timeFormat)), 0644)
   return err
 }
 
@@ -76,18 +76,18 @@ func debugOutput(s string) {
 
 func sendEmail(m *gomail.Message) (err error) {
   debugOutput("Sending Mail")
-  d := gomail.Dialer{Host: configuration.Mailserver, Port: configuration.Mailport}
-  d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+  d := gomail.Dialer{Host: config.Mailserver, Port: config.Mailport}
+  d.TLSConfig = &tls.Config{InsecureSkipVerify: true} // nolint: gas
   err = d.DialAndSend(m)
   return
 }
 
-func sendErrorMessage(errorString string) error {
+func sendErrorMessage(errorMessage error) error {
   m := gomail.NewMessage()
-  m.SetHeader("From", configuration.Mailfrom)
-  m.SetHeader("To", configuration.Mailtoerror)
+  m.SetHeader("From", config.Mailfrom)
+  m.SetHeader("To", config.Mailtoerror)
   m.SetHeader("Subject", "ERROR in rss_fetcher")
-  m.SetBody("text/plain", errorString)
+  m.SetBody("text/plain", fmt.Sprintf("%v", errorMessage))
 
   err := sendEmail(m)
   return err
@@ -113,8 +113,8 @@ func feedToText(item *gofeed.Item, html bool) string {
 
 func sendFeedItem(title string, item *gofeed.Item) error {
   m := gomail.NewMessage()
-  m.SetHeader("From", configuration.Mailfrom)
-  m.SetHeader("To", configuration.Mailto)
+  m.SetHeader("From", config.Mailfrom)
+  m.SetHeader("To", config.Mailto)
   m.SetHeader("Subject", fmt.Sprintf("[RSS] [%s]: %s", title, item.Title))
   m.SetBody("text/plain", feedToText(item, false))
   m.AddAlternative("text/html", feedToText(item, true))
@@ -123,8 +123,9 @@ func sendFeedItem(title string, item *gofeed.Item) error {
   return err
 }
 
-func processFeed(feedInput ConfigurationFeed) error {
-  timeout := time.Duration(configuration.Timeout) * time.Second
+// nolint: gocyclo
+func processFeed(feedInput configurationFeed) error {
+  timeout := time.Duration(config.Timeout) * time.Second
   netTransport := &http.Transport {
     Dial: (&net.Dialer{
       Timeout: timeout,
@@ -138,7 +139,7 @@ func processFeed(feedInput ConfigurationFeed) error {
     Transport: netTransport,
   }
 
-  feed, err := fp.ParseURL(feedInput.Url)
+  feed, err := fp.ParseURL(feedInput.URL)
   if err != nil {
     return err
   }
@@ -164,44 +165,52 @@ func processFeed(feedInput ConfigurationFeed) error {
   return nil
 }
 
+// nolint: gocyclo
 func main() {
   flag.Parse()
 
-  if *config == "" {
+  if *configFile == "" {
     log.Fatalln("Please provide a valid config file")
   }
 
-  file, err := os.Open(*config)
+  file, err := os.Open(*configFile)
   if err != nil {
-    log.Fatalf("Error opening config file: %s", err.Error())
+    log.Fatalf("Error opening config file: %v", err)
   }
-  defer file.Close()
+
+  defer func() {
+    rerr := file.Close()
+    if rerr != nil {
+      log.Fatalf("Error closing config file: %v", rerr)
+    }
+  }()
+
   decoder := json.NewDecoder(file)
-  configuration = Configuration{}
-  err = decoder.Decode(&configuration)
+  config = configuration{}
+  err = decoder.Decode(&config)
   if err != nil {
-    log.Fatalf("Error parsing config file: %s", err.Error())
+    log.Fatalf("Error parsing config file: %v", err)
   }
 
   log.Println("Starting RSS Fetcher")
   start := time.Now()
   lastUpdated = getLastUpdated()
 
-  for _, feed := range configuration.Feeds {
-    log.Printf("Processing feed %s (%s)", feed.Title, feed.Url)
+  for _, feed := range config.Feeds {
+    log.Printf("Processing feed %s (%s)", feed.Title, feed.URL)
     err = processFeed(feed)
     if err != nil {
-      log.Printf("ERROR: %s\n", err.Error())
-      if configuration.Mailonerror {
-        err = sendErrorMessage(err.Error())
+      log.Printf("ERROR: %v\n", err)
+      if config.Mailonerror {
+        err = sendErrorMessage(err)
         if err != nil {
-          log.Printf("ERROR on sending error mail: %s", err.Error())
+          log.Printf("ERROR on sending error mail: %v", err)
         }
       }
     }
   }
   err = setLastUpdated(start)
   if err != nil {
-    log.Printf(err.Error())
+    log.Printf("error on writing last udpate file: %v", err)
   }
 }

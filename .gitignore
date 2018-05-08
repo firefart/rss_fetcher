@@ -3,3 +3,4 @@ out/
 config.json
 rss_fetcher
 .last_update
+*.swp
