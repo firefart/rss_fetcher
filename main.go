@@ -60,12 +60,12 @@ func getLastUpdated() time.Time {
 		debugOutput(fmt.Sprintf("error on parsing last udpate file: %v", err))
 		return time.Now()
 	}
-	debugOutput(fmt.Sprintf("Last Updated from file: %s", timeToString(s)))
+	debugOutput(fmt.Sprintf("Last Updated from file: %s", timeToString(&s)))
 	return s
 }
 
 func setLastUpdated(t time.Time) error {
-	debugOutput(fmt.Sprintf("writing last update to file: %s", timeToString(t)))
+	debugOutput(fmt.Sprintf("writing last update to file: %s", timeToString(&t)))
 	err := ioutil.WriteFile(config.Lastupdatefile, []byte(t.Format(timeFormat)), 0644)
 	return err
 }
@@ -126,7 +126,10 @@ func sendFeedItem(title string, item *gofeed.Item) error {
 	return err
 }
 
-func timeToString(t time.Time) string {
+func timeToString(t *time.Time) string {
+	if t == nil {
+		return ""
+	}
 	return t.Local().Format(time.ANSIC)
 }
 
@@ -153,7 +156,7 @@ func processFeed(feedInput configurationFeed) error {
 	// check if feed was updated
 	if feed.UpdatedParsed != nil && feed.UpdatedParsed.Before(lastUpdated) {
 		debugOutput(fmt.Sprintf("skipping feed %s because of no update - updated: %s, lastupdated: %s",
-			feedInput.Title, timeToString(*feed.UpdatedParsed), timeToString(lastUpdated)))
+			feedInput.Title, timeToString(feed.UpdatedParsed), timeToString(&lastUpdated)))
 		return nil
 	}
 
@@ -165,15 +168,15 @@ func processFeed(feedInput configurationFeed) error {
 		if (item.UpdatedParsed != nil && item.UpdatedParsed.After(lastUpdated)) ||
 			(item.PublishedParsed != nil && item.PublishedParsed.After(lastUpdated)) {
 			log.Printf("found entry in feed \"%s\": \"%s\" - updated: %s, published: %s, lastupdated: %s", feedInput.Title, item.Title,
-				timeToString(*item.UpdatedParsed), timeToString(*item.PublishedParsed), timeToString(lastUpdated))
+				timeToString(item.UpdatedParsed), timeToString(item.PublishedParsed), timeToString(&lastUpdated))
 			err = sendFeedItem(feedInput.Title, item)
 			if err != nil {
 				return err
 			}
 		} else {
 			debugOutput(fmt.Sprintf("skipping item %s because date is in the past - updated: %s, published: %s, lastupdated: %s",
-				item.Title, timeToString(*item.UpdatedParsed), timeToString(*item.PublishedParsed),
-				timeToString(lastUpdated)))
+				item.Title, timeToString(item.UpdatedParsed), timeToString(item.PublishedParsed),
+				timeToString(&lastUpdated)))
 		}
 	}
 	return nil
