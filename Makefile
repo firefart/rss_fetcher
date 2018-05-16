@@ -38,4 +38,4 @@ $(GOMETALINTER):
 
 .PHONY: lint
 lint: deps $(GOMETALINTER)
-	$(BIN_DIR)/gometalinter .
+	$(BIN_DIR)/gometalinter ./...
