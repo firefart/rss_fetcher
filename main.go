@@ -153,12 +153,6 @@ func processFeed(feedInput configurationFeed) error {
 	if err != nil {
 		return err
 	}
-	// check if feed was updated
-	if feed.UpdatedParsed != nil && feed.UpdatedParsed.Before(lastUpdated) {
-		debugOutput(fmt.Sprintf("skipping feed %s because of no update - updated: %s, lastupdated: %s",
-			feedInput.Title, timeToString(feed.UpdatedParsed), timeToString(&lastUpdated)))
-		return nil
-	}
 
 	for _, item := range feed.Items {
 		if item.UpdatedParsed == nil && item.PublishedParsed == nil {
