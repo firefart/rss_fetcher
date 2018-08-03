@@ -52,27 +52,27 @@ type configurationFeed struct {
 func getLastUpdated() time.Time {
 	content, err := ioutil.ReadFile(config.Lastupdatefile)
 	if err != nil {
-		debugOutput(fmt.Sprintf("error on reading last udpate file: %v", err))
+		debugOutput("error on reading last udpate file: %v", err)
 		return time.Now()
 	}
 	s, err := time.Parse(timeFormat, string(content))
 	if err != nil {
-		debugOutput(fmt.Sprintf("error on parsing last udpate file: %v", err))
+		debugOutput("error on parsing last udpate file: %v", err)
 		return time.Now()
 	}
-	debugOutput(fmt.Sprintf("Last Updated from file: %s", timeToString(&s)))
+	debugOutput("Last Updated from file: %s", timeToString(&s))
 	return s
 }
 
 func setLastUpdated(t time.Time) error {
-	debugOutput(fmt.Sprintf("writing last update to file: %s", timeToString(&t)))
+	debugOutput("writing last update to file: %s", timeToString(&t))
 	err := ioutil.WriteFile(config.Lastupdatefile, []byte(t.Format(timeFormat)), 0644)
 	return err
 }
 
-func debugOutput(s string) {
+func debugOutput(s string, a ...interface{}) {
 	if *debug {
-		log.Printf("[DEBUG] %s", s)
+		log.Printf("[DEBUG] %s", fmt.Sprintf(s, a...))
 	}
 }
 
@@ -168,9 +168,9 @@ func processFeed(feedInput configurationFeed) error {
 				return err
 			}
 		} else {
-			debugOutput(fmt.Sprintf("skipping item %s because date is in the past - updated: %s, published: %s, lastupdated: %s",
+			debugOutput("skipping item %s because date is in the past - updated: %s, published: %s, lastupdated: %s",
 				item.Title, timeToString(item.UpdatedParsed), timeToString(item.PublishedParsed),
-				timeToString(&lastUpdated)))
+				timeToString(&lastUpdated))
 		}
 	}
 	return nil
