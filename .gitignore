@@ -5,3 +5,4 @@ rss_fetcher
 rss_fetcher.exe
 .last_update
 *.swp
+*.db

@@ -12,7 +12,7 @@ GOMETALINTER := $(BIN_DIR)/gometalinter
 .DEFAULT_GOAL := build
 
 .PHONY: $(PLATFORMS)
-$(PLATFORMS):
+$(PLATFORMS): protoc
 	GOOS=$(os) GOARCH=$(ARCH) go build -o $(OUTDIR)/$(BINARY)-$(VERSION)-$(os)-$(ARCH)
 	zip -j $(OUTDIR)/$(BINARY)-$(VERSION)-$(os)-$(ARCH).zip $(OUTDIR)/$(BINARY)-$(VERSION)-$(os)-$(ARCH)
 
@@ -20,13 +20,15 @@ $(PLATFORMS):
 release: clean deps lint $(PLATFORMS)
 
 .PHONY: build
-build:
+build: protoc
 	go build .
 
 .PHONY: deps
 deps:
+	go get -u github.com/golang/protobuf/protoc-gen-go
 	go get -u gopkg.in/gomail.v2
 	go get -u github.com/mmcdole/gofeed
+	go get -u github.com/golang/protobuf/proto
 
 .PHONY: clean
 clean:
@@ -39,3 +41,7 @@ $(GOMETALINTER):
 .PHONY: lint
 lint: deps $(GOMETALINTER)
 	$(BIN_DIR)/gometalinter ./...
+
+.PHONY: protoc
+protoc:
+	protoc --go_out=. rss/rss.proto

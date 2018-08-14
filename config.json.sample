@@ -6,7 +6,7 @@
   "mailto": "People <b@b.com>",
   "mailonerror": true,
   "mailtoerror": "c@c.com",
-  "lastupdatefile": ".last_update",
+  "database": "rss.db",
   "feeds": [
     {
       "title": "Certificates *.aaa.com",
