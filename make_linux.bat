@@ -1,6 +1,4 @@
 @echo off
-set GOOS=linux
-set GOARCH=amd64
 
 echo Updating Dependencies
 go get -u github.com/golang/protobuf/protoc-gen-go
@@ -11,6 +9,13 @@ go get -u github.com/golang/protobuf/proto
 echo Running gometalinter
 gometalinter ./...
 
-echo Building program
+echo Running tests
+go test -v
+
+echo Generating protobuf code
 protoc --go_out=. rss/rss.proto
+
+echo Building program
+set GOOS=linux
+set GOARCH=amd64
 go build -o rss_fetcher

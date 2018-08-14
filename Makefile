@@ -17,11 +17,15 @@ $(PLATFORMS): protoc
 	zip -j $(OUTDIR)/$(BINARY)-$(VERSION)-$(os)-$(ARCH).zip $(OUTDIR)/$(BINARY)-$(VERSION)-$(os)-$(ARCH)
 
 .PHONY: release
-release: clean deps lint $(PLATFORMS)
+release: clean deps lint test $(PLATFORMS)
 
 .PHONY: build
-build: protoc
+build: protoc test
 	go build .
+
+.PHONY: test
+test: protoc
+	go test -v
 
 .PHONY: deps
 deps:

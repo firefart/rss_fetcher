@@ -1,0 +1,17 @@
+{
+    "timeout": 10,
+    "mailserver": "localhost",
+    "mailport": 25,
+    "mailfrom": "RSS <a@a.com>",
+    "mailto": "People <b@b.com>",
+    "mailonerror": false,
+    "mailtoerror": "c@c.com",
+    "database": "rss.db",
+    "feeds": [
+      {
+        "title": "test",
+        "url": "http://feedforall.com/sample.xml"
+      }
+    ]
+  }
+  

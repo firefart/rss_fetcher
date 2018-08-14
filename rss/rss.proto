@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message Rss {
+    int64 LastRun = 1;
+    map<string, int64> Feeds = 2;
+}
