@@ -38,7 +38,7 @@ func main() {
 		if last == 0 {
 			last = start
 		}
-		entry, errFeed := processFeed(config, feed, r.LastRun, last)
+		entry, errFeed := processFeed(config, feed, last)
 		if errFeed != nil {
 			processError(config, errFeed)
 		} else {

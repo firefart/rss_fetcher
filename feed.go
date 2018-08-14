@@ -30,7 +30,7 @@ func fetchFeed(url string, timeout int) (*gofeed.Feed, error) {
 	return fp.ParseURL(url)
 }
 
-func processFeed(config *configuration, feedInput configurationFeed, lastRun, lastUpdate int64) (int64, error) {
+func processFeed(config *configuration, feedInput configurationFeed, lastUpdate int64) (int64, error) {
 	retVal := lastUpdate
 	feed, err := fetchFeed(feedInput.URL, config.Timeout)
 	if err != nil {
