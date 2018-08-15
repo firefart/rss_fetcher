@@ -33,9 +33,9 @@ func main() {
 
 	for _, feed := range config.Feeds {
 		log.Printf("processing feed %q (%s)", feed.Title, feed.URL)
-		last := r.Feeds[feed.URL]
+		last, ok := r.Feeds[feed.URL]
 		// if it's a new feed only process new entries and ignore old ones
-		if last == 0 {
+		if !ok {
 			last = start
 		}
 		entry, errFeed := processFeed(config, feed, last)
