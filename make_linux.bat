@@ -6,14 +6,14 @@ go get -u gopkg.in/gomail.v2
 go get -u github.com/mmcdole/gofeed
 go get -u github.com/golang/protobuf/proto
 
+echo Generating protobuf code
+protoc --go_out=. rss/rss.proto
+
 echo Running gometalinter
 gometalinter ./...
 
 echo Running tests
 go test -v
-
-echo Generating protobuf code
-protoc --go_out=. rss/rss.proto
 
 echo Building program
 set GOOS=linux
