@@ -7,6 +7,9 @@ Expected errors during execution are also sent via E-Mail to the E-Mail address 
 
 For sending mails you should setup a local SMTP server like postfix to handle resubmission, signing and so on for you. SMTP authentication is currently not implemented.
 
+The program keeps the last date of the last entry per feed in it's database to compare it to on the next fetch.
+We can't just use the current date because crt.sh is caching it's feeds and they do not appear at the time written in the feed.
+
 ## Installation on a systemd based system
 * Build binary or download it
 ```bash
@@ -14,13 +17,16 @@ make
 ```
 or
 ```bash
-go get gopkg.in/gomail.v2
-go get github.com/mmcdole/gofeed
+go get -u github.com/golang/protobuf/protoc-gen-go
+go get -u gopkg.in/gomail.v2
+go get -u github.com/mmcdole/gofeed
+go get -u github.com/golang/protobuf/proto
 go build
 ```
-or get downloadlink from [https://github.com/FireFart/rss_fetcher/releases/](https://github.com/FireFart/rss_fetcher/releases/) and download
+or
 ```
-wget https://github.com/FireFart/rss_fetcher/archive/....
+make_linux.bat
+make_windows.bat
 ```
 
 * Add a user to run the binary
