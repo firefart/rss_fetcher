@@ -45,7 +45,7 @@ func saveDatabase(database string, r proto.Message) error {
 }
 
 // removes old feeds from database
-func cleanupDatabase(r *rss.Rss, c *configuration) {
+func cleanupDatabase(r *rss.Rss, c configuration) {
 	urls := make(map[string]struct{})
 	for _, x := range c.Feeds {
 		urls[x.URL] = struct{}{}

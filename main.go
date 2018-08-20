@@ -25,11 +25,11 @@ func main() {
 	start := time.Now().UnixNano()
 	r, err := readDatabase(config.Database)
 	if err != nil {
-		processError(config, fmt.Errorf("error in database file: %v", err))
+		processError(*config, fmt.Errorf("error in database file: %v", err))
 		os.Exit(1)
 	}
 
-	cleanupDatabase(r, config)
+	cleanupDatabase(r, *config)
 
 	for _, feed := range config.Feeds {
 		log.Printf("processing feed %q (%s)", feed.Title, feed.URL)
@@ -38,9 +38,9 @@ func main() {
 		if !ok {
 			last = start
 		}
-		entry, errFeed := processFeed(config, feed, last)
+		entry, errFeed := processFeed(*config, feed, last)
 		if errFeed != nil {
-			processError(config, errFeed)
+			processError(*config, errFeed)
 		} else {
 			r.Feeds[feed.URL] = entry
 		}
@@ -48,7 +48,7 @@ func main() {
 	r.LastRun = start
 	err = saveDatabase(config.Database, r)
 	if err != nil {
-		processError(config, fmt.Errorf("error on writing database file: %v", err))
+		processError(*config, fmt.Errorf("error on writing database file: %v", err))
 		os.Exit(1)
 	}
 }

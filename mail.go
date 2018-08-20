@@ -10,7 +10,7 @@ import (
 	gomail "gopkg.in/gomail.v2"
 )
 
-func sendEmail(config *configuration, m *gomail.Message) error {
+func sendEmail(config configuration, m *gomail.Message) error {
 	debugOutput("sending mail")
 	if *nomail {
 		text, err := messageToString(m)
@@ -25,7 +25,7 @@ func sendEmail(config *configuration, m *gomail.Message) error {
 	return d.DialAndSend(m)
 }
 
-func sendErrorMessage(config *configuration, errorMessage error) error {
+func sendErrorMessage(config configuration, errorMessage error) error {
 	debugOutput("sending error mail")
 	m := gomail.NewMessage()
 	m.SetHeader("From", config.Mailfrom)
@@ -36,7 +36,7 @@ func sendErrorMessage(config *configuration, errorMessage error) error {
 	return sendEmail(config, m)
 }
 
-func sendFeedItem(config *configuration, title string, item *gofeed.Item) error {
+func sendFeedItem(config configuration, title string, item *gofeed.Item) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", config.Mailfrom)
 	m.SetHeader("To", config.Mailto)

@@ -81,7 +81,7 @@ func TestCleanupDatase(t *testing.T) {
 				d.Feeds[url] = int64(i)
 			}
 
-			cleanupDatabase(d, &c)
+			cleanupDatabase(d, c)
 
 			if len(d.Feeds) != initialLen {
 				t.Fatalf("expected Feeds to have len %d, got %d", initialLen, len(d.Feeds))
