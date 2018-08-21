@@ -25,7 +25,7 @@ build: protoc test
 
 .PHONY: test
 test: protoc
-	go test -v
+	go test -v ./...
 
 .PHONY: deps
 deps:

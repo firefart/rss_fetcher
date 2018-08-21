@@ -13,7 +13,7 @@ echo Running gometalinter
 gometalinter ./...
 
 echo Running tests
-go test -v
+go test -v ./...
 
 echo Building program
 set GOOS=linux
