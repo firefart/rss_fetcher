@@ -1,6 +1,4 @@
 GOPATH := $(or $(GOPATH), $(HOME)/go)
-BIN_DIR := $(GOPATH)/bin
-GOMETALINTER := $(BIN_DIR)/gometalinter
 
 .DEFAULT_GOAL := build
 
@@ -18,13 +16,10 @@ deps:
 	go get -u github.com/mmcdole/gofeed
 	go get -u github.com/golang/protobuf/proto
 
-$(GOMETALINTER):
-	go get -u github.com/alecthomas/gometalinter
-	$(GOMETALINTER) --install
-
 .PHONY: lint
-lint: deps $(GOMETALINTER)
-	$(BIN_DIR)/gometalinter ./...
+lint: deps
+	go get -u github.com/alecthomas/gometalinter
+	gometalinter --deadline=5m  ./...
 
 .PHONY: protoc
 protoc:

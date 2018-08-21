@@ -1,4 +1,6 @@
 # RSS Fetcher
+[![Build Status](https://travis-ci.org/FireFart/rss_fetcher.svg?branch=master)](https://travis-ci.org/FireFart/rss_fetcher)
+
 This little GO program is intended to fetch all configured RSS or ATOM feeds every hour (configurable) and send new entries per E-Mail.
 
 This project is mainly written because IFTT can not handle crt.sh feeds :/
