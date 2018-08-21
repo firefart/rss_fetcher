@@ -8,7 +8,7 @@ build: protoc deps test
 
 .PHONY: test
 test: deps lint
-	go test -v ./...
+	go test -v -race ./...
 
 .PHONY: deps
 deps:
@@ -19,6 +19,7 @@ deps:
 .PHONY: lint
 lint: deps
 	go get -u github.com/alecthomas/gometalinter
+	gometalinter --install
 	gometalinter --deadline=5m  ./...
 
 .PHONY: protoc
