@@ -6,10 +6,4 @@ go:
 git:
   depth: 1
 
-install:
-  - git clone --depth=1 https://github.com/google/protobuf.git
-  - pushd protobuf && git submodule update --init --recursive && ./autogen.sh && ./configure --prefix=/usr && make && make check && sudo make install && sudo ldconfig && popd
-
-env:
-  global:
-    - MAKEFLAGS="-j 2"
+script: make test

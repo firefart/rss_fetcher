@@ -14,10 +14,8 @@ test: deps lint
 
 .PHONY: deps
 deps:
-	go get -u github.com/golang/protobuf/protoc-gen-go
 	go get -u gopkg.in/gomail.v2
 	go get -u github.com/mmcdole/gofeed
-	go get -u github.com/golang/protobuf/proto
 
 $(GOMETALINTER):
 	go get -u github.com/alecthomas/gometalinter
@@ -27,6 +25,11 @@ $(GOMETALINTER):
 lint: deps $(GOMETALINTER)
 	$(BIN_DIR)/gometalinter ./...
 
+.PHONY: protocdeps
+protocdeps:
+	go get -u github.com/golang/protobuf/protoc-gen-go
+	go get -u github.com/golang/protobuf/proto
+
 .PHONY: protoc
-protoc: deps
+protoc: protocdeps
 	protoc --go_out=. rss/rss.proto
