@@ -75,13 +75,22 @@ func feedToText(item *gofeed.Item, html bool) string {
 	}
 	var buffer bytes.Buffer
 	if item.Link != "" {
-		buffer.WriteString(fmt.Sprintf("%s%s", item.Link, linebreak))
+		_, err := buffer.WriteString(fmt.Sprintf("%s%s", item.Link, linebreak))
+		if err != nil {
+			return err.Error()
+		}
 	}
 	if item.Description != "" {
-		buffer.WriteString(fmt.Sprintf("%s%s", item.Description, linebreak))
+		_, err := buffer.WriteString(fmt.Sprintf("%s%s", item.Description, linebreak))
+		if err != nil {
+			return err.Error()
+		}
 	}
 	if item.Content != "" {
-		buffer.WriteString(fmt.Sprintf("%s%s", item.Content, linebreak))
+		_, err := buffer.WriteString(fmt.Sprintf("%s%s", item.Content, linebreak))
+		if err != nil {
+			return err.Error()
+		}
 	}
 	return strings.TrimSuffix(buffer.String(), linebreak)
 }

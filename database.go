@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/FireFart/rss_fetcher/rss"
-	"github.com/gogo/protobuf/proto"
+	"github.com/golang/protobuf/proto"
 )
 
 func newDatabase() *rss.Rss {
