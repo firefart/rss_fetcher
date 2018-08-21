@@ -2,3 +2,7 @@ language: go
 go:
   - "1.10"
   - master
+
+install:
+  - git clone https://github.com/google/protobuf.git
+  - pushd protobuf && git submodule update --init --recursive && ./autogen.sh && ./configure --prefix=/usr && make && make check && sudo make install && sudo ldconfig && popd
