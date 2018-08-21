@@ -27,7 +27,6 @@ func feedServer(t *testing.T, filename string) *httptest.Server {
 }
 
 func TestFetchFeed(t *testing.T) {
-	t.Parallel()
 	ts := feedServer(t, "valid_feed.xml")
 	defer ts.Close()
 	_, err := fetchFeed(ts.URL, 10)
@@ -37,7 +36,6 @@ func TestFetchFeed(t *testing.T) {
 }
 
 func TestFetchFeedInvalid(t *testing.T) {
-	t.Parallel()
 	ts := feedServer(t, "invalid_feed.xml")
 	defer ts.Close()
 	_, err := fetchFeed(ts.URL, 10)

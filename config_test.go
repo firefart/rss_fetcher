@@ -15,6 +15,17 @@ func TestGetConfig(t *testing.T) {
 	}
 }
 
+func TestGetConfigErrors(t *testing.T) {
+	_, err := getConfig("")
+	if err == nil {
+		t.Fatal("expected error on empty filename")
+	}
+	_, err = getConfig("this_does_not_exist")
+	if err == nil {
+		t.Fatal("expected error on invalid file")
+	}
+}
+
 func TestGetConfigInvalid(t *testing.T) {
 	_, err := getConfig(path.Join("testdata", "invalid.json"))
 	if err == nil {
