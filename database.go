@@ -20,7 +20,7 @@ func readDatabase(database string) (*rss.Rss, error) {
 		return newDatabase(), nil
 	}
 
-	b, err := ioutil.ReadFile(database)
+	b, err := ioutil.ReadFile(database) // nolint: gosec
 	if err != nil {
 		return nil, fmt.Errorf("could not read database %s: %v", database, err)
 	}
