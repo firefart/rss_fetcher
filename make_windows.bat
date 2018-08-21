@@ -10,6 +10,8 @@ echo Generating protobuf code
 protoc --go_out=. rss/rss.proto
 
 echo Running gometalinter
+go get -u github.com/alecthomas/gometalinter
+gometalinter --install > nul
 gometalinter ./...
 
 echo Running tests
