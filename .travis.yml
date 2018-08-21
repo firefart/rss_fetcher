@@ -6,3 +6,7 @@ go:
 install:
   - git clone --depth=1 https://github.com/google/protobuf.git
   - pushd protobuf && git submodule update --depth 1 --init --recursive && ./autogen.sh && ./configure --prefix=/usr && make && make check && sudo make install && sudo ldconfig && popd
+
+env:
+  global:
+    - MAKEFLAGS="-j 2"
