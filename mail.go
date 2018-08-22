@@ -12,7 +12,7 @@ import (
 
 func sendEmail(config configuration, m *gomail.Message) error {
 	debugOutput("sending mail")
-	if *nomail {
+	if *test {
 		text, err := messageToString(m)
 		if err != nil {
 			return fmt.Errorf("could not print mail: %v", err)

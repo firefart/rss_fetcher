@@ -10,7 +10,7 @@ import (
 
 var (
 	debug      = flag.Bool("debug", false, "Print debug output")
-	nomail     = flag.Bool("nomail", false, "Print mail to stdout instead of sending")
+	test       = flag.Bool("test", false, "do not send mails, print them instead")
 	configFile = flag.String("config", "", "Config File to use")
 )
 
