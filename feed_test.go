@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -11,6 +12,11 @@ import (
 
 	"github.com/mmcdole/gofeed"
 )
+
+func init() {
+	t := true
+	test = &t
+}
 
 func feedServer(t *testing.T, filename string) *httptest.Server {
 	t.Helper()
@@ -64,5 +70,29 @@ func TestFeedToText(t *testing.T) {
 	x = feedToText(&item, true)
 	if !strings.Contains(x, "<br><br>") {
 		t.Fatal("missing html line break in feed text")
+	}
+}
+
+func TestProcessFeed(t *testing.T) {
+	ts := feedServer(t, "valid_feed.xml")
+	defer ts.Close()
+	config := configuration{
+		Timeout: 1,
+	}
+	input := configurationFeed{
+		Title: "Title",
+		URL:   ts.URL,
+	}
+
+	// with mail
+	_, err := processFeed(config, input, 0)
+	if err != nil {
+		t.Fatalf("got error when fetching feed: %v", err)
+	}
+
+	// no mail
+	_, err = processFeed(config, input, math.MaxInt64)
+	if err != nil {
+		t.Fatalf("got error when fetching feed: %v", err)
 	}
 }
