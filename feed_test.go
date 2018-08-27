@@ -27,7 +27,7 @@ func feedServer(t *testing.T, filename string) *httptest.Server {
 	}
 	content := string(b)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, content)
+		fmt.Fprint(w, content)
 	}))
 	return ts
 }
