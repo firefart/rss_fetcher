@@ -1,4 +1,5 @@
 @echo off
+SET BUILDARGS=-ldflags="-s -w" -gcflags="all=-trimpath=%GOPATH%\src" -asmflags="all=-trimpath=%GOPATH%\src"
 
 echo Updating Dependencies
 go get -u github.com/golang/protobuf/protoc-gen-go
@@ -15,9 +16,9 @@ gometalinter --install > nul
 gometalinter ./...
 
 echo Running tests
-go test -v -race ./...
+go test -v ./...
 
-echo Building program
+echo Running build
 set GOOS=linux
 set GOARCH=amd64
-go build -o rss_fetcher
+go build %BUILDARGS% -o rss_fetcher
