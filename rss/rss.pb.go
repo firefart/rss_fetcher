@@ -3,9 +3,11 @@
 
 package rss
 
-import proto "github.com/golang/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import (
+	fmt "fmt"
+	proto "github.com/golang/protobuf/proto"
+	math "math"
+)
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -30,16 +32,17 @@ func (m *Rss) Reset()         { *m = Rss{} }
 func (m *Rss) String() string { return proto.CompactTextString(m) }
 func (*Rss) ProtoMessage()    {}
 func (*Rss) Descriptor() ([]byte, []int) {
-	return fileDescriptor_rss_cbde2b0154eaa990, []int{0}
+	return fileDescriptor_95cc919bf63ba5ce, []int{0}
 }
+
 func (m *Rss) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Rss.Unmarshal(m, b)
 }
 func (m *Rss) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_Rss.Marshal(b, m, deterministic)
 }
-func (dst *Rss) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Rss.Merge(dst, src)
+func (m *Rss) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Rss.Merge(m, src)
 }
 func (m *Rss) XXX_Size() int {
 	return xxx_messageInfo_Rss.Size(m)
@@ -69,9 +72,9 @@ func init() {
 	proto.RegisterMapType((map[string]int64)(nil), "Rss.FeedsEntry")
 }
 
-func init() { proto.RegisterFile("rss/rss.proto", fileDescriptor_rss_cbde2b0154eaa990) }
+func init() { proto.RegisterFile("rss/rss.proto", fileDescriptor_95cc919bf63ba5ce) }
 
-var fileDescriptor_rss_cbde2b0154eaa990 = []byte{
+var fileDescriptor_95cc919bf63ba5ce = []byte{
 	// 141 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2d, 0x2a, 0x2e, 0xd6,
 	0x2f, 0x2a, 0x2e, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x57, 0x6a, 0x60, 0xe4, 0x62, 0x0e, 0x2a,
