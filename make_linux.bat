@@ -1,24 +1,31 @@
 @echo off
 SET BUILDARGS=-ldflags="-s -w" -gcflags="all=-trimpath=%GOPATH%\src" -asmflags="all=-trimpath=%GOPATH%\src"
 
-echo Updating Dependencies
-go get -u github.com/golang/protobuf/protoc-gen-go
-go get -u gopkg.in/gomail.v2
-go get -u github.com/mmcdole/gofeed
-go get -u github.com/golang/protobuf/proto
+echo [*] Updating Dependencies
+go get -u
 
-echo Generating protobuf code
+echo [*] mod tidy
+go mod tidy -v
+
+echo [*] Generating protobuf code
+go get -u github.com/golang/protobuf/protoc-gen-go
 protoc --go_out=. rss/rss.proto
 
-echo Running gometalinter
-go get -u github.com/alecthomas/gometalinter
-gometalinter --install > nul
-gometalinter ./...
+echo [*] go fmt
+go fmt ./...
 
-echo Running tests
+echo [*] go vet
+go vet ./...
+
+rem echo [*] Running gometalinter
+rem go get -u github.com/alecthomas/gometalinter
+rem gometalinter --install > nul
+rem gometalinter ./...
+
+echo [*] Running Tests
 go test -v ./...
 
-echo Running build
+echo [*] Running build
 set GOOS=linux
 set GOARCH=amd64
 go build %BUILDARGS% -o rss_fetcher
