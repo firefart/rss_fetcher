@@ -16,6 +16,9 @@ echo [*] Generating protobuf code
 go get -u github.com/golang/protobuf/protoc-gen-go
 protoc --go_out=. rss/rss.proto
 
+echo [*] mod tidy v2
+go mod tidy -v
+
 echo [*] go fmt
 go fmt ./...
 
