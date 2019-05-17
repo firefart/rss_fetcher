@@ -8,4 +8,4 @@ env:
 git:
   depth: 1
 
-script: make test
+script: make lint test
