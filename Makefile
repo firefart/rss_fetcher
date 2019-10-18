@@ -4,7 +4,11 @@ GOPATH := $(or $(GOPATH), $(HOME)/go)
 
 .PHONY: build
 build: protoc deps test
-	go build . -trimpath
+	go build -trimpath .
+
+.PHONY: linux
+linux: protoc deps test
+	GOOS=linux GOARCH=amd64 GO111MODULE=on go build -trimpath .
 
 .PHONY: test
 test: deps
