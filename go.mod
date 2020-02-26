@@ -1,6 +1,6 @@
 module github.com/FireFart/rss_fetcher
 
-go 1.12
+go 1.14
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
