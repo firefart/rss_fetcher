@@ -72,7 +72,9 @@ func init() {
 	proto.RegisterMapType((map[string]int64)(nil), "Rss.FeedsEntry")
 }
 
-func init() { proto.RegisterFile("rss/rss.proto", fileDescriptor_95cc919bf63ba5ce) }
+func init() {
+	proto.RegisterFile("rss/rss.proto", fileDescriptor_95cc919bf63ba5ce)
+}
 
 var fileDescriptor_95cc919bf63ba5ce = []byte{
 	// 141 bytes of a gzipped FileDescriptorProto
