@@ -1,7 +1,5 @@
 # RSS Fetcher
 
-[![Build Status](https://travis-ci.org/FireFart/rss_fetcher.svg?branch=master)](https://travis-ci.org/FireFart/rss_fetcher)
-
 This little GO program is intended to fetch all configured RSS or ATOM feeds every hour (configurable) and send new entries per E-Mail.
 
 This project is mainly written because IFTT can not handle crt.sh feeds :/
@@ -15,7 +13,7 @@ We can't just use the current date because crt.sh is caching it's feeds and they
 
 ## Installation on a systemd based system
 
-* Build binary or download it
+- Build binary or download it
 
 ```bash
 make
@@ -24,10 +22,7 @@ make
 or
 
 ```bash
-go get -u github.com/golang/protobuf/protoc-gen-go
-go get -u gopkg.in/gomail.v2
-go get -u github.com/mmcdole/gofeed
-go get -u github.com/golang/protobuf/proto
+go get
 go build
 ```
 
@@ -38,39 +33,64 @@ make_linux.bat
 make_windows.bat
 ```
 
-* Add a user to run the binary
+- Add a user to run the binary
 
 ```bash
 adduser --system rss
 ```
 
-* Copy everything to home dir
+- Copy everything to home dir
 
 ```bash
 cp -R checkout_dir /home/rss/
 ```
 
-* Modify run time (if you want to run it at other intervalls)
+- Modify run time (if you want to run it at other intervalls)
 
 ```bash
 vim /home/rss/rss_fetcher.timer
 ```
 
-* Edit the config
+- Edit the config
 
 ```bash
 cp /home/rss/config.json.sample /home/rss/config.json
 vim /home/rss/config.json
 ```
 
-* Install the service and timer files
+- Install the service and timer files
 
 ```bash
 ./install_service.sh
 ```
 
-* Watch the logs
+- Watch the logs
 
 ```bash
 journalctl -u rss_fetcher.service -f
+```
+
+## Config Sample
+
+```json
+{
+  "timeout": 10,
+  "mailserver": "localhost",
+  "mailport": 25,
+  "mailfrom": "RSS <a@a.com>",
+  "mailto": "People <b@b.com>",
+  "mailonerror": true,
+  "mailtoerror": "c@c.com",
+  "database": "rss.db",
+  "feeds": [
+    {
+      "title": "Certificates *.aaa.com",
+      "url": "https://crt.sh/atom?q=%25.aaa.com"
+    },
+    {
+      "title": "Certificates *.bbb.com",
+      "url": "https://crt.sh/atom?q=%25.bbb.com"
+    }
+  ]
+}
 ```
