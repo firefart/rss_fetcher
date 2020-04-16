@@ -6,7 +6,8 @@ import (
 	"os"
 
 	"github.com/FireFart/rss_fetcher/rss"
-	"github.com/golang/protobuf/proto"
+	log "github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/proto"
 )
 
 func newDatabase() *rss.Rss {
@@ -14,7 +15,7 @@ func newDatabase() *rss.Rss {
 }
 
 func readDatabase(database string) (*rss.Rss, error) {
-	debugOutput("Reading database")
+	log.Debug("Reading database")
 	// create database if needed
 	if _, err := os.Stat(database); os.IsNotExist(err) {
 		return newDatabase(), nil
@@ -33,7 +34,6 @@ func readDatabase(database string) (*rss.Rss, error) {
 }
 
 func saveDatabase(database string, r proto.Message) error {
-	debugOutput("Saving database: %q", proto.MarshalTextString(r))
 	b, err := proto.Marshal(r)
 	if err != nil {
 		return fmt.Errorf("could not marshal database %s: %v", database, err)
@@ -54,7 +54,7 @@ func cleanupDatabase(r *rss.Rss, c configuration) {
 	for url := range r.Feeds {
 		// delete entry if not present in config file
 		if _, ok := urls[url]; !ok {
-			debugOutput("Removing entry %q from database", url)
+			log.Debugf("Removing entry %q from database", url)
 			delete(r.Feeds, url)
 		}
 	}

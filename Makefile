@@ -29,5 +29,5 @@ lint: deps
 
 .PHONY: protoc
 protoc:
-	go get -u github.com/golang/protobuf/protoc-gen-go
+	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
 	protoc --go_out=. rss/rss.proto

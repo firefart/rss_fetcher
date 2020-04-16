@@ -9,7 +9,7 @@ echo [*] mod tidy
 go mod tidy -v
 
 echo [*] Generating protobuf code
-go get -u github.com/golang/protobuf/protoc-gen-go
+go get -u google.golang.org/protobuf/cmd/protoc-gen-go
 protoc --go_out=. rss/rss.proto
 
 echo [*] mod tidy v2

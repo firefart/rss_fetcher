@@ -4,20 +4,20 @@ import (
 	"bytes"
 	"crypto/tls"
 	"fmt"
-	"log"
 
 	"github.com/mmcdole/gofeed"
+	log "github.com/sirupsen/logrus"
 	gomail "gopkg.in/gomail.v2"
 )
 
 func sendEmail(config configuration, m *gomail.Message) error {
-	debugOutput("sending mail")
+	log.Debug("sending mail")
 	if *test {
 		text, err := messageToString(m)
 		if err != nil {
 			return fmt.Errorf("could not print mail: %v", err)
 		}
-		log.Printf("[MAIL] %s", text)
+		log.Infof("[MAIL] %s", text)
 		return nil
 	}
 	d := gomail.Dialer{Host: config.Mailserver, Port: config.Mailport}
@@ -26,7 +26,7 @@ func sendEmail(config configuration, m *gomail.Message) error {
 }
 
 func sendErrorMessage(config configuration, errorMessage error) error {
-	debugOutput("sending error mail")
+	log.Debug("sending error mail")
 	m := gomail.NewMessage()
 	m.SetHeader("From", config.Mailfrom)
 	m.SetHeader("To", config.Mailtoerror)

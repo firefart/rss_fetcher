@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -16,6 +17,13 @@ var (
 
 func main() {
 	flag.Parse()
+
+	if *debug {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
+
 	config, err := getConfig(*configFile)
 	if err != nil {
 		log.Fatalf("could not parse config file: %v", err)

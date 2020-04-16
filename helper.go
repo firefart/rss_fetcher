@@ -1,24 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"time"
-)
 
-func debugOutput(s string, a ...interface{}) {
-	if *debug {
-		log.Printf("[DEBUG] %s", fmt.Sprintf(s, a...))
-	}
-}
+	log "github.com/sirupsen/logrus"
+)
 
 func processError(config configuration, err error) {
 	if err != nil {
-		log.Printf("ERROR: %v", err)
+		log.Error(err)
 		if config.Mailonerror {
 			err = sendErrorMessage(config, err)
 			if err != nil {
-				log.Printf("ERROR on sending error mail: %v", err)
+				log.Errorf("ERROR on sending error mail: %v", err)
 			}
 		}
 	}

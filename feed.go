@@ -3,13 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/mmcdole/gofeed"
+	log "github.com/sirupsen/logrus"
 )
 
 func fetchFeed(url string, timeout int) (*gofeed.Feed, error) {
@@ -38,10 +38,10 @@ func processFeed(config configuration, feedInput configurationFeed, lastUpdate i
 	}
 
 	for _, item := range feed.Items {
-		debugOutput("%s", item.Title)
+		log.Debug(item.Title)
 
 		if item.UpdatedParsed == nil && item.PublishedParsed == nil {
-			log.Printf("error in item for feed %s - no published or updated date", feedInput.Title)
+			log.Warnf("error in item for feed %s - no published or updated date", feedInput.Title)
 			continue
 		}
 
@@ -54,13 +54,13 @@ func processFeed(config configuration, feedInput configurationFeed, lastUpdate i
 
 		if entryLastUpdated > lastUpdate {
 			retVal = entryLastUpdated
-			log.Printf("found entry in feed %q: %q - updated: %s, lastupdated: %s", feedInput.Title, item.Title, timeToString(time.Unix(0, entryLastUpdated)), timeToString(time.Unix(0, lastUpdate)))
+			log.Infof("found entry in feed %q: %q - updated: %s, lastupdated: %s", feedInput.Title, item.Title, timeToString(time.Unix(0, entryLastUpdated)), timeToString(time.Unix(0, lastUpdate)))
 			err = sendFeedItem(config, feedInput.Title, item)
 			if err != nil {
 				return 0, err
 			}
 		} else {
-			debugOutput("feed %q: skipping item %q because date is in the past - updated: %s, lastupdated: %s",
+			log.Debugf("feed %q: skipping item %q because date is in the past - updated: %s, lastupdated: %s",
 				feedInput.Title, item.Title, timeToString(time.Unix(0, entryLastUpdated)), timeToString(time.Unix(0, lastUpdate)))
 		}
 	}

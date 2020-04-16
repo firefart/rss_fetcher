@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+option go_package = "rss";
+
 message Rss {
     int64 LastRun = 1;
     map<string, int64> Feeds = 2;
