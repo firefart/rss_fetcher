@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "rss";
+option go_package = "rss;rss";
 
 message Rss {
     int64 LastRun = 1;
