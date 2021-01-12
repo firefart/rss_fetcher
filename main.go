@@ -18,6 +18,7 @@ var (
 func main() {
 	flag.Parse()
 
+	log.SetOutput(os.Stdout)
 	if *debug {
 		log.SetLevel(log.DebugLevel)
 	} else {
