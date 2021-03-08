@@ -9,7 +9,7 @@ linux: protoc update test
 	GOOS=linux GOARCH=amd64 go build -trimpath .
 
 .PHONY: test
-test: update
+test:
 	go test -v -race ./...
 
 .PHONY: update
