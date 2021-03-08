@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/FireFart/rss_fetcher/rss"
@@ -21,7 +20,7 @@ func readDatabase(database string) (*rss.Rss, error) {
 		return newDatabase(), nil
 	}
 
-	b, err := ioutil.ReadFile(database) // nolint: gosec
+	b, err := os.ReadFile(database) // nolint: gosec
 	if err != nil {
 		return nil, fmt.Errorf("could not read database %s: %v", database, err)
 	}
@@ -38,7 +37,7 @@ func saveDatabase(database string, r proto.Message) error {
 	if err != nil {
 		return fmt.Errorf("could not marshal database %s: %v", database, err)
 	}
-	if err := ioutil.WriteFile(database, b, 0666); err != nil {
+	if err := os.WriteFile(database, b, 0666); err != nil {
 		return fmt.Errorf("could not write database %s: %v", database, err)
 	}
 	return nil

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 )
@@ -43,7 +43,7 @@ func TestReadInvalidDatabase(t *testing.T) {
 
 func TestSaveDatabase(t *testing.T) {
 	d := newDatabase()
-	f, err := ioutil.TempFile("", "testdb")
+	f, err := os.CreateTemp("", "testdb")
 	if err != nil {
 		t.Fatalf("could not create temp file: %v", err)
 	}
