@@ -44,4 +44,4 @@ protoc:
 	# rm -f readme.txt
 	# get dependencies
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-	protoc -I ./rss -I /usr/local/include/ rss/rss.proto --go_out=.
+	protoc -I ./proto -I /usr/local/include/ ./proto/rss.proto --go_out=.

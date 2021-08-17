@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/FireFart/rss_fetcher/rss"
+	"github.com/FireFart/rss_fetcher/internal/pb"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
 )
 
-func newDatabase() *rss.Rss {
-	return &rss.Rss{Feeds: make(map[string]int64)}
+func newDatabase() *pb.Rss {
+	return &pb.Rss{Feeds: make(map[string]int64)}
 }
 
-func readDatabase(database string) (*rss.Rss, error) {
+func readDatabase(database string) (*pb.Rss, error) {
 	log.Debug("Reading database")
 	// create database if needed
 	if _, err := os.Stat(database); os.IsNotExist(err) {
@@ -25,11 +25,11 @@ func readDatabase(database string) (*rss.Rss, error) {
 		return nil, fmt.Errorf("could not read database %s: %v", database, err)
 	}
 
-	var rss rss.Rss
-	if err := proto.Unmarshal(b, &rss); err != nil {
+	rssMsg := &pb.Rss{}
+	if err := proto.Unmarshal(b, rssMsg); err != nil {
 		return nil, fmt.Errorf("could not unmarshal database %s: %v", database, err)
 	}
-	return &rss, nil
+	return rssMsg, nil
 }
 
 func saveDatabase(database string, r proto.Message) error {
@@ -44,7 +44,7 @@ func saveDatabase(database string, r proto.Message) error {
 }
 
 // removes old feeds from database
-func cleanupDatabase(r *rss.Rss, c configuration) {
+func cleanupDatabase(r *pb.Rss, c configuration) {
 	urls := make(map[string]struct{})
 	for _, x := range c.Feeds {
 		urls[x.URL] = struct{}{}
