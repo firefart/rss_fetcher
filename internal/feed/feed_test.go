@@ -14,7 +14,7 @@ import (
 
 func feedServer(t *testing.T, filename string) *httptest.Server {
 	t.Helper()
-	fullName := filepath.Join("testdata", filename)
+	fullName := filepath.Join("..", "..", "testdata", filename)
 	b, err := os.ReadFile(fullName)
 	if err != nil {
 		t.Fatalf("could not read file %s: %v", fullName, err)

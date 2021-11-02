@@ -27,7 +27,7 @@ func TestReadEmptyDatabase(t *testing.T) {
 }
 
 func TestReadDatabase(t *testing.T) {
-	r, err := ReadDatabase(filepath.Join("testdata", "rss.testdb"))
+	r, err := ReadDatabase(filepath.Join("..", "..", "testdata", "rss.testdb"))
 	if err != nil {
 		t.Fatalf("encountered error on reading database: %v", err)
 	}
@@ -37,7 +37,7 @@ func TestReadDatabase(t *testing.T) {
 }
 
 func TestReadInvalidDatabase(t *testing.T) {
-	_, err := ReadDatabase(filepath.Join("testdata", "invalid.testdb"))
+	_, err := ReadDatabase(filepath.Join("..", "..", "testdata", "invalid.testdb"))
 	if err == nil {
 		t.Fatal("expected error but none returned")
 	}

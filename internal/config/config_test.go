@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetConfig(t *testing.T) {
-	c, err := GetConfig(path.Join("testdata", "test.json"))
+	c, err := GetConfig(path.Join("..", "..", "testdata", "test.json"))
 	if err != nil {
 		t.Fatalf("got error when reading config file: %v", err)
 	}
@@ -27,7 +27,7 @@ func TestGetConfigErrors(t *testing.T) {
 }
 
 func TestGetConfigInvalid(t *testing.T) {
-	_, err := GetConfig(path.Join("testdata", "invalid.json"))
+	_, err := GetConfig(path.Join("..", "..", "testdata", "invalid.json"))
 	if err == nil {
 		t.Fatal("expected error when reading config file but got none")
 	}
