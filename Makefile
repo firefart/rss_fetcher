@@ -2,7 +2,8 @@
 
 .PHONY: build
 build:
-	go build -trimpath .
+	go build -trimpath -o rss_fetcher ./cmd/rss_fetcher
+	go build -trimpath -o db_printer ./cmd/db_printer
 
 .PHONY: linux
 linux: protoc update test
@@ -14,7 +15,7 @@ test:
 
 .PHONY: update
 update: protoc
-	go get -u
+	go get -u ./...
 	go mod tidy -v
 
 .PHONY: lint
@@ -32,16 +33,17 @@ lint-docker:
 	docker pull golangci/golangci-lint:latest
 	docker run --rm -v $$(pwd):/app -w /app golangci/golangci-lint:latest golangci-lint run
 
+.PHONY: install-protoc
+install-protoc:
+	mkdir -p /tmp/protoc
+	curl -s -L https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | jq '.assets[] | select(.name | endswith("-linux-x86_64.zip")) | .browser_download_url' | xargs curl -s -L -o /tmp/protoc/protoc.zip
+	unzip -d /tmp/protoc/ /tmp/protoc/protoc.zip
+	sudo mv /tmp/protoc/bin/protoc /usr/bin/protoc
+	sudo rm -rf /usr/local/include/google
+	sudo mv /tmp/protoc/include/* /usr/local/include
+	rm -rf /tmp/protoc
+
 .PHONY: protoc
-protoc:
-	# make sure to always have the latest protoc installed with all the includes
-	# https://github.com/protocolbuffers/protobuf/releases/latest
-	# sudo mv bin/protoc /usr/bin/protoc
-	# sudo rm -rf /usr/local/include/google
-	# sudo mv include/* /usr/local/include
-	# rm -rf bin
-	# rm -rf include
-	# rm -f readme.txt
-	# get dependencies
+protoc: install-protoc
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	protoc -I ./proto -I /usr/local/include/ ./proto/rss.proto --go_out=.

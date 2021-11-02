@@ -1,23 +1,24 @@
-package main
+package database
 
 import (
 	"fmt"
 	"os"
 
+	"github.com/FireFart/rss_fetcher/internal/config"
 	"github.com/FireFart/rss_fetcher/internal/pb"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
 )
 
-func newDatabase() *pb.Rss {
+func NewDatabase() *pb.Rss {
 	return &pb.Rss{Feeds: make(map[string]int64)}
 }
 
-func readDatabase(database string) (*pb.Rss, error) {
+func ReadDatabase(database string) (*pb.Rss, error) {
 	log.Debug("Reading database")
 	// create database if needed
 	if _, err := os.Stat(database); os.IsNotExist(err) {
-		return newDatabase(), nil
+		return NewDatabase(), nil
 	}
 
 	b, err := os.ReadFile(database) // nolint: gosec
@@ -32,7 +33,7 @@ func readDatabase(database string) (*pb.Rss, error) {
 	return rssMsg, nil
 }
 
-func saveDatabase(database string, r proto.Message) error {
+func SaveDatabase(database string, r proto.Message) error {
 	b, err := proto.Marshal(r)
 	if err != nil {
 		return fmt.Errorf("could not marshal database %s: %v", database, err)
@@ -44,7 +45,7 @@ func saveDatabase(database string, r proto.Message) error {
 }
 
 // removes old feeds from database
-func cleanupDatabase(r *pb.Rss, c configuration) {
+func CleanupDatabase(r *pb.Rss, c config.Configuration) {
 	urls := make(map[string]struct{})
 	for _, x := range c.Feeds {
 		urls[x.URL] = struct{}{}

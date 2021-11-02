@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-type configuration struct {
+type Configuration struct {
 	Timeout     int                 `json:"timeout"`
 	Mailserver  string              `json:"mailserver"`
 	Mailport    int                 `json:"mailport"`
@@ -15,16 +15,17 @@ type configuration struct {
 	Mailonerror bool                `json:"mailonerror"`
 	Mailtoerror string              `json:"mailtoerror"`
 	Mailto      string              `json:"mailto"`
-	Feeds       []configurationFeed `json:"feeds"`
+	Feeds       []ConfigurationFeed `json:"feeds"`
 	Database    string              `json:"database"`
+	Test        bool
 }
 
-type configurationFeed struct {
+type ConfigurationFeed struct {
 	Title string `json:"title"`
 	URL   string `json:"url"`
 }
 
-func getConfig(f string) (*configuration, error) {
+func GetConfig(f string) (*Configuration, error) {
 	if f == "" {
 		return nil, fmt.Errorf("please provide a valid config file")
 	}
@@ -36,7 +37,7 @@ func getConfig(f string) (*configuration, error) {
 	reader := bytes.NewReader(b)
 
 	decoder := json.NewDecoder(reader)
-	c := configuration{}
+	c := Configuration{}
 	if err = decoder.Decode(&c); err != nil {
 		return nil, err
 	}

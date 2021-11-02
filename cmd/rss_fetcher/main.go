@@ -6,6 +6,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/FireFart/rss_fetcher/internal/config"
+	"github.com/FireFart/rss_fetcher/internal/database"
+	"github.com/FireFart/rss_fetcher/internal/feed"
+	"github.com/FireFart/rss_fetcher/internal/helper"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -25,39 +30,40 @@ func main() {
 		log.SetLevel(log.InfoLevel)
 	}
 
-	config, err := getConfig(*configFile)
+	config, err := config.GetConfig(*configFile)
 	if err != nil {
 		log.Fatalf("could not parse config file: %v", err)
 	}
+	config.Test = *test
 
 	log.Println("Starting RSS Fetcher")
 	start := time.Now().UnixNano()
-	r, err := readDatabase(config.Database)
+	r, err := database.ReadDatabase(config.Database)
 	if err != nil {
-		processError(*config, fmt.Errorf("error in database file: %v", err))
+		helper.ProcessError(*config, fmt.Errorf("error in database file: %v", err))
 		os.Exit(1)
 	}
 
-	cleanupDatabase(r, *config)
+	database.CleanupDatabase(r, *config)
 
-	for _, feed := range config.Feeds {
-		log.Printf("processing feed %q (%s)", feed.Title, feed.URL)
-		last, ok := r.Feeds[feed.URL]
+	for _, f := range config.Feeds {
+		log.Printf("processing feed %q (%s)", f.Title, f.URL)
+		last, ok := r.Feeds[f.URL]
 		// if it's a new feed only process new entries and ignore old ones
 		if !ok {
 			last = start
 		}
-		entry, errFeed := processFeed(*config, feed, last)
+		entry, errFeed := feed.ProcessFeed(*config, f, last)
 		if errFeed != nil {
-			processError(*config, errFeed)
+			helper.ProcessError(*config, errFeed)
 		} else {
-			r.Feeds[feed.URL] = entry
+			r.Feeds[f.URL] = entry
 		}
 	}
 	r.LastRun = start
-	err = saveDatabase(config.Database, r)
+	err = database.SaveDatabase(config.Database, r)
 	if err != nil {
-		processError(*config, fmt.Errorf("error on writing database file: %v", err))
+		helper.ProcessError(*config, fmt.Errorf("error on writing database file: %v", err))
 		os.Exit(1)
 	}
 }

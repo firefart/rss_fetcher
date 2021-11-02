@@ -1,21 +1,23 @@
-package main
+package database
 
 import (
 	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/FireFart/rss_fetcher/internal/config"
 )
 
 func TestNewDatabase(t *testing.T) {
-	x := newDatabase()
+	x := NewDatabase()
 	if x.Feeds == nil {
 		t.Fatal("Feed map is nil")
 	}
 }
 
 func TestReadEmptyDatabase(t *testing.T) {
-	r, err := readDatabase("")
+	r, err := ReadDatabase("")
 	if err != nil {
 		t.Fatalf("encountered error on reading database: %v", err)
 	}
@@ -25,7 +27,7 @@ func TestReadEmptyDatabase(t *testing.T) {
 }
 
 func TestReadDatabase(t *testing.T) {
-	r, err := readDatabase(filepath.Join("testdata", "rss.testdb"))
+	r, err := ReadDatabase(filepath.Join("testdata", "rss.testdb"))
 	if err != nil {
 		t.Fatalf("encountered error on reading database: %v", err)
 	}
@@ -35,19 +37,19 @@ func TestReadDatabase(t *testing.T) {
 }
 
 func TestReadInvalidDatabase(t *testing.T) {
-	_, err := readDatabase(filepath.Join("testdata", "invalid.testdb"))
+	_, err := ReadDatabase(filepath.Join("testdata", "invalid.testdb"))
 	if err == nil {
 		t.Fatal("expected error but none returned")
 	}
 }
 
 func TestSaveDatabase(t *testing.T) {
-	d := newDatabase()
+	d := NewDatabase()
 	f, err := os.CreateTemp("", "testdb")
 	if err != nil {
 		t.Fatalf("could not create temp file: %v", err)
 	}
-	err = saveDatabase(f.Name(), d)
+	err = SaveDatabase(f.Name(), d)
 	if err != nil {
 		t.Fatalf("encountered error on writing database: %v", err)
 	}
@@ -66,12 +68,12 @@ func TestCleanupDatase(t *testing.T) {
 	}
 	for _, x := range tt {
 		t.Run(x.testName, func(t *testing.T) {
-			d := newDatabase()
-			c := configuration{}
+			d := NewDatabase()
+			c := config.Configuration{}
 			for i := 0; i < initialLen; i++ {
 				url := fmt.Sprintf("test%d", i)
 				d.Feeds[url] = int64(i)
-				x := configurationFeed{URL: url}
+				x := config.ConfigurationFeed{URL: url}
 				c.Feeds = append(c.Feeds, x)
 			}
 
@@ -81,7 +83,7 @@ func TestCleanupDatase(t *testing.T) {
 				d.Feeds[url] = int64(i)
 			}
 
-			cleanupDatabase(d, c)
+			CleanupDatabase(d, c)
 
 			if len(d.Feeds) != initialLen {
 				t.Fatalf("expected Feeds to have len %d, got %d", initialLen, len(d.Feeds))
