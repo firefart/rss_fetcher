@@ -24,10 +24,9 @@ func main() {
 	flag.Parse()
 
 	log.SetOutput(os.Stdout)
+	log.SetLevel(log.InfoLevel)
 	if *debug {
 		log.SetLevel(log.DebugLevel)
-	} else {
-		log.SetLevel(log.InfoLevel)
 	}
 
 	config, err := config.GetConfig(*configFile)

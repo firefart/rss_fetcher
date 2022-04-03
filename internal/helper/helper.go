@@ -9,13 +9,15 @@ import (
 )
 
 func ProcessError(c config.Configuration, err error) {
-	if err != nil {
-		log.Error(err)
-		if c.Mailonerror {
-			err = mail.SendErrorMessage(c, err)
-			if err != nil {
-				log.Errorf("ERROR on sending error mail: %v", err)
-			}
+	if err == nil {
+		return
+	}
+
+	log.Error(err)
+	if c.Mailonerror {
+		err = mail.SendErrorMessage(c, err)
+		if err != nil {
+			log.Errorf("ERROR on sending error mail: %v", err)
 		}
 	}
 }
