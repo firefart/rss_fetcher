@@ -2,8 +2,8 @@
 
 .PHONY: build
 build:
-	go build -trimpath -o rss_fetcher ./cmd/rss_fetcher
-	go build -trimpath -o db_printer ./cmd/db_printer
+	CGO_ENABLED=0 go build -trimpath -o rss_fetcher ./cmd/rss_fetcher
+	CGO_ENABLED=0 go build -trimpath -o db_printer ./cmd/db_printer
 
 .PHONY: linux
 linux: protoc update test
