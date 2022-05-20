@@ -58,7 +58,7 @@ func ProcessFeed(c config.Configuration, feedInput config.ConfigurationFeed, las
 			retVal = entryLastUpdated
 			log.Infof("found entry in feed %q: %q - updated: %s, lastupdated: %s", feedInput.Title, item.Title, helper.TimeToString(time.Unix(0, entryLastUpdated)), helper.TimeToString(time.Unix(0, lastUpdate)))
 
-			words := append(c.GlobalIgnoreWords, feedInput.IgnoreWords)
+			words := append(c.GlobalIgnoreWords, feedInput.IgnoreWords...)
 			if shouldFeedBeIgnored(words, item) {
 				log.Infof("ignoring entry %q in feed %q because of matched ignore word", item.Title, feedInput.Title)
 				continue

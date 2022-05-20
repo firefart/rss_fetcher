@@ -22,9 +22,9 @@ type Configuration struct {
 }
 
 type ConfigurationFeed struct {
-	Title       string `json:"title"`
-	URL         string `json:"url"`
-	IgnoreWords string `json:"ignorewords"`
+	Title       string   `json:"title"`
+	URL         string   `json:"url"`
+	IgnoreWords []string `json:"ignorewords"`
 }
 
 func GetConfig(f string) (*Configuration, error) {
