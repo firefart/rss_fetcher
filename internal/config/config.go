@@ -8,21 +8,23 @@ import (
 )
 
 type Configuration struct {
-	Timeout     int                 `json:"timeout"`
-	Mailserver  string              `json:"mailserver"`
-	Mailport    int                 `json:"mailport"`
-	Mailfrom    string              `json:"mailfrom"`
-	Mailonerror bool                `json:"mailonerror"`
-	Mailtoerror string              `json:"mailtoerror"`
-	Mailto      string              `json:"mailto"`
-	Feeds       []ConfigurationFeed `json:"feeds"`
-	Database    string              `json:"database"`
-	Test        bool
+	Timeout           int                 `json:"timeout"`
+	Mailserver        string              `json:"mailserver"`
+	Mailport          int                 `json:"mailport"`
+	Mailfrom          string              `json:"mailfrom"`
+	Mailonerror       bool                `json:"mailonerror"`
+	Mailtoerror       string              `json:"mailtoerror"`
+	Mailto            string              `json:"mailto"`
+	Feeds             []ConfigurationFeed `json:"feeds"`
+	Database          string              `json:"database"`
+	GlobalIgnoreWords []string            `json:"globalignorewords"`
+	Test              bool
 }
 
 type ConfigurationFeed struct {
-	Title string `json:"title"`
-	URL   string `json:"url"`
+	Title       string `json:"title"`
+	URL         string `json:"url"`
+	IgnoreWords string `json:"ignorewords"`
 }
 
 func GetConfig(f string) (*Configuration, error) {

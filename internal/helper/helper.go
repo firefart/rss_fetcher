@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"strings"
 	"time"
 
 	"github.com/FireFart/rss_fetcher/internal/config"
@@ -24,4 +25,17 @@ func ProcessError(c config.Configuration, err error) {
 
 func TimeToString(t time.Time) string {
 	return t.Local().Format(time.ANSIC)
+}
+
+func StringMatches(s string, words []string) bool {
+	if words == nil || len(s) == 0 {
+		return false
+	}
+
+	for _, w := range words {
+		if strings.Contains(s, w) {
+			return true
+		}
+	}
+	return false
 }

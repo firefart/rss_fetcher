@@ -57,6 +57,13 @@ func ProcessFeed(c config.Configuration, feedInput config.ConfigurationFeed, las
 		if entryLastUpdated > lastUpdate {
 			retVal = entryLastUpdated
 			log.Infof("found entry in feed %q: %q - updated: %s, lastupdated: %s", feedInput.Title, item.Title, helper.TimeToString(time.Unix(0, entryLastUpdated)), helper.TimeToString(time.Unix(0, lastUpdate)))
+
+			words := append(c.GlobalIgnoreWords, feedInput.IgnoreWords)
+			if shouldFeedBeIgnored(words, item) {
+				log.Infof("ignoring entry %q in feed %q because of matched ignore word", item.Title, feedInput.Title)
+				continue
+			}
+
 			err = mail.SendFeedItem(c, feedInput.Title, item)
 			if err != nil {
 				return 0, err
@@ -68,4 +75,14 @@ func ProcessFeed(c config.Configuration, feedInput config.ConfigurationFeed, las
 	}
 
 	return retVal, nil
+}
+
+func shouldFeedBeIgnored(ignoreWords []string, feed *gofeed.Item) bool {
+	if helper.StringMatches(feed.Title, ignoreWords) ||
+		helper.StringMatches(feed.Content, ignoreWords) ||
+		helper.StringMatches(feed.Description, ignoreWords) {
+		return true
+	}
+
+	return false
 }

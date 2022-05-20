@@ -82,10 +82,12 @@ journalctl -u rss_fetcher.service -f
   "mailonerror": true,
   "mailtoerror": "c@c.com",
   "database": "rss.db",
+  "globalignorewords": ["ignore1", "ignore2"],
   "feeds": [
     {
       "title": "Certificates *.aaa.com",
-      "url": "https://crt.sh/atom?q=%25.aaa.com"
+      "url": "https://crt.sh/atom?q=%25.aaa.com",
+      "ignorewords": ["[Precertificate]", "ignore2"]
     },
     {
       "title": "Certificates *.bbb.com",
