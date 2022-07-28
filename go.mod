@@ -16,8 +16,8 @@ require (
 	github.com/mmcdole/goxpp v0.0.0-20200921145534-2f3784f67354 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	golang.org/x/net v0.0.0-20220726230323-06994584191e // indirect
-	golang.org/x/sys v0.0.0-20220727055044-e65921a090b8 // indirect
+	golang.org/x/net v0.0.0-20220728030405-41545e8bf201 // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )
