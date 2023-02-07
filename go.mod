@@ -1,6 +1,6 @@
 module github.com/FireFart/rss_fetcher
 
-go 1.18
+go 1.20
 
 require (
 	github.com/mmcdole/gofeed v1.2.0
