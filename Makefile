@@ -2,12 +2,12 @@
 
 .PHONY: build
 build:
-	CGO_ENABLED=0 go build -trimpath -o rss_fetcher ./cmd/rss_fetcher
-	CGO_ENABLED=0 go build -trimpath -o db_printer ./cmd/db_printer
+	CGO_ENABLED=0 go build -buildvcs=false -trimpath -o rss_fetcher ./cmd/rss_fetcher
+	CGO_ENABLED=0 go build -buildvcs=false -trimpath -o db_printer ./cmd/db_printer
 
 .PHONY: linux
 linux: protoc update test
-	GOOS=linux GOARCH=amd64 go build -trimpath .
+	GOOS=linux GOARCH=amd64 go build -buildvcs=false -trimpath .
 
 .PHONY: test
 test:
