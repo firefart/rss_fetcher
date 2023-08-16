@@ -30,10 +30,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Last Run: %s\n", helper.TimeToString(time.UnixMicro(r.LastRun)))
+	fmt.Printf("Last Run: %s\n", helper.TimeToString(time.Unix(0, r.LastRun)))
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.AlignRight|tabwriter.Debug)
 	for key, element := range r.Feeds {
-		fmt.Fprintf(w, "%s\t%s\n", key, helper.TimeToString(time.UnixMicro(element)))
+		fmt.Fprintf(w, "%s\t%s\n", key, helper.TimeToString(time.Unix(0, element)))
 	}
 	w.Flush()
 }
