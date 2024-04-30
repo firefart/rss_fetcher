@@ -5,12 +5,12 @@ go 1.20
 require (
 	github.com/mmcdole/gofeed v1.3.0
 	github.com/sirupsen/logrus v1.9.3
-	google.golang.org/protobuf v1.33.0
+	google.golang.org/protobuf v1.34.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
 
 require (
-	github.com/PuerkitoBio/goquery v1.9.1 // indirect
+	github.com/PuerkitoBio/goquery v1.9.2 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mmcdole/goxpp v1.1.1 // indirect
