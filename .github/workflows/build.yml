@@ -5,11 +5,10 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    container:
-      image: golang:latest
-
     steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -18,16 +17,6 @@ jobs:
       - name: go version
         run: go version
 
-      - name: Checkout sources
-        uses: actions/checkout@v4
-
-      - name: Setup Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
       - name: Build and Test
         run: |
           make build test
